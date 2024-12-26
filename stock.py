@@ -5,7 +5,6 @@ import os
 
 class DB:
     def __init__(self, product=None, db={}):
-        # import ipdb; ipdb.set_trace()
         self.db = db
         self.product = product
 
@@ -20,7 +19,6 @@ class DB:
         })
         
     def _get_product(self, sku):
-        # import ipdb; ipdb.set_trace()
         return self.db.get(sku)
 
     def _delete_product(self, sku):
@@ -30,47 +28,40 @@ class DB:
     def _update_product(self, sku):
         return self._get_product(sku)
 
+    def _get_all_records(self):
+        return self.db
 
-class ReadProduct:
-    def __init__(self, sku=None):
-        self.sku = sku
+# class ReadProduct:
+#     def __init__(self, sku=None):
+#         self.sku = sku
 
-    def _exist_inventory_file(self):
-        if os.path.exists("inventory.txt"):
-            return True
+#     def _exist_inventory_file(self):
+#         if os.path.exists("inventory.txt"):
+#             return True
         
-    def _read_inventory_products(self, sku):
-        # import ipdb; ipdb.set_trace()
-        if self._exist_inventory_file():
-            with open('inventory.txt', "r") as f:
-                return f.read()
-        else:
-            raise FileNotFoundError("File not found")
+#     def _read_inventory_products(self, sku):
+#         # import ipdb; ipdb.set_trace()
+#         if self._exist_inventory_file():
+#             with open('inventory.txt', "r") as f:
+#                 return f.read()
+#         else:
+#             raise FileNotFoundError("File not found")
 
 
 class SaveProduct:
     def __init__(self, product=None):
         self.products = product
 
-    def _exist_inventory_file(self):
-        if os.path.exists("inventory.txt"):
-            return True
+    # def _exist_inventory_file(self):
+    #     if os.path.exists("inventory.txt"):
+    #         return True
         
-    def _save_inventoy_products(self, product):
-        if self._exist_inventory_file():
-            with open('inventory.txt', "a") as f:
-                f.write(f"product: {product.name}\n")
-                f.write(f"price: {product.price}\n")
-                f.write(f"quantity: {product.quantity}\n")
-                f.write(f"sku: {product.sku}\n")
-                f.write(f"------------------\n")
-        else:
-            with open("inventory.txt", "w") as f:
-                f.write(f"product: {product.name}\n")
-                f.write(f"price: {product.price}\n")
-                f.write(f"quantity: {product.quantity}\n")
-                f.write(f"sku: {product.sku}\n")
-                f.write(f"------------------\n")
+    def _save_stock_in_file_txt(self, db):
+        records = db._get_all_records()
+        for k, v in records.items():
+            with open("inventory.txt", "a") as f:
+                f.write(f"{k}: {v}\n")
+
 
 class Product:
     def __init__(self, name, price, quantity, sku):
@@ -106,7 +97,7 @@ class Menu:
 
 if __name__ == "__main__":
     save_db = SaveProduct()
-    read_db = ReadProduct()
+    # read_db = ReadProduct()
     menu = Menu()
     option = False
     # db = False
@@ -160,4 +151,5 @@ if __name__ == "__main__":
 
     # Exit
     if option == "5":
-        save_db._save_inventoy_products(product)
+        db = DB()
+        save_db._save_stock_in_file_txt(db)
