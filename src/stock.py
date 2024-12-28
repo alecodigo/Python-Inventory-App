@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-
+from exceptions import UnknownException
 
 class DB:
     def __init__(self, product=None, db={}):
@@ -98,9 +98,9 @@ class Menu:
 if __name__ == "__main__":
     save_db = SaveProduct()
     # read_db = ReadProduct()
+    db = DB()
     menu = Menu()
     option = False
-    # db = False
     while option != "5":
         menu.print_main_menu()
         option = input("Enter your option: ")
@@ -111,19 +111,26 @@ if __name__ == "__main__":
                 if not product_name.isalpha():
                     print("\nWarning: Product name must be a string\n")
                     continue
+            except:
+                raise UnknownException("Unknown error")
+            try:
                 product_price = abs(int(input("Enter the product price: ")))
                 product_quantity = abs(int(input("Enter the product quantity: ")))
+            except ValueError as e:
+                print('Error: Invalid product name')
+                continue
+            try:
                 product_sku = input("Enter the product sku: ")
                 product = Product(product_name, product_price, product_quantity, product_sku)
-                db = DB(product)
+                db(product)
                 db._save_db()
-            except ValueError as e:
-                raise e
+            except:
+                raise UnknownException("Unknown error")
 
         # Update product
         if option == "2":
             product_sku = input("Enter the product sku: ")
-            db = DB()
+            # db = DB()
             product_db = db._update_product(product_sku)
             if product_db:
                 menu.print_update_options()
@@ -146,16 +153,16 @@ if __name__ == "__main__":
         # Delete product
         if option == "3":
             product_sku = input("Enter the product sku: ")
-            db = DB()
+            # db = DB()
             if db._delete_product(product_sku):
                 print(f"Product {product_sku} deleted")
             
         if option == "4":
-            db = DB()
+            # db = DB()
             product_sku = input("Enter the product product sku: ")
             print(f"", db._get_product(product_sku))
 
     # Exit
     if option == "5":
-        db = DB()
+        # db = DB()
         save_db._save_stock_in_file_txt(db)

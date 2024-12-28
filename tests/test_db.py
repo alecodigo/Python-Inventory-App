@@ -6,13 +6,13 @@ from src.stock import Product, DB
 class DBTests(unittest.TestCase):
 
     def setUp(self):
-        self.product = Product(name="Papa", price=100, quantity=1, sku="1")
+        self.product = Product(name="Papa", price="100", quantity=1, sku="1")
         self.db = DB(self.product)
         self.db._save_db()
     
     def test_save_db(self):
         assert self.product.name == "Papa"
-        assert self.product.price == 100
+        assert self.product.price == '2a'
         assert self.product.quantity == 1
         assert self.product.sku == "1"
 
