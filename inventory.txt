@@ -1,0 +1,2 @@
+1: {'name': 'papa', 'price': 20, 'quantity': 300, 'sku': '1'}
+2: {'name': 'tomates', 'price': 30, 'quantity': '400', 'sku': '2'}

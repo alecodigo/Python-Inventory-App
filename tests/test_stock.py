@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+import os
+import sys
+# With the line below, the problem with tne module no fond is solved
+# sys.path.append(os.path.abspath(os.path.join(__file__, '../')))
+# import ipdb; ipdb.set_trace()
 import unittest
 from src.stock import Product, DB
 
@@ -32,7 +37,7 @@ class DBTests(unittest.TestCase):
         product.update({
             "name": "Tomate",
             "price": 100,
-            "quantity": 200,
+            "quantity": "a20",
         })
         self.assertEqual(self.db._get_product(sku)["name"], "Tomate")
         self.assertEqual(self.db._get_product(sku)["price"], 100)
