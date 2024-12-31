@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import os
 
 class DB:
     _instance = None
@@ -10,8 +10,31 @@ class DB:
             cls._instance.db = {}
         return cls._instance
 
-    def __init__(self, product):
+    def __init__(self, product=None):
         self.product = product
+
+    @staticmethod
+    def _preload_data(data):
+        product = list()
+        for k in data.keys():
+            product.append(Product(
+                name=data[k]["name"], 
+                price=data[k]["price"], 
+                quantity=data[k]["quantity"], 
+                sku=data[k]["sku"])
+            )
+        return DB(tuple(product))
+
+    def _save_product_from_file(self):
+        for product in self.product:
+            self.db.update({
+                product.sku: {
+                    "name": product.name,
+                    "price": product.price,
+                    "quantity": product.quantity,
+                    "sku": product.sku,
+                }  
+            })
 
     def save_db(self):
         self.db.update({
@@ -36,30 +59,31 @@ class DB:
     def _get_all_records(self):
         return self.db
 
-# class ReadProduct:
-#     def __init__(self, sku=None):
-#         self.sku = sku
+class ReadDB:
 
-#     def _exist_inventory_file(self):
-#         if os.path.exists("inventory.txt"):
-#             return True
+    def _exist_inventory_file(self):
+        if os.path.exists("inventory.txt"):
+            return True
         
-#     def _read_inventory_products(self, sku):
-#         # import ipdb; ipdb.set_trace()
-#         if self._exist_inventory_file():
-#             with open('inventory.txt', "r") as f:
-#                 return f.read()
-#         else:
-#             raise FileNotFoundError("File not found")
+    def _data_parse(self, lines):
+        data = {}
+        for line in lines:
+            line = line.strip().split(': ',  1)
+            data[int(line[0])] = eval(line[1])
+        return data
+        
+    def _load_stock_from_file(self):
+        if self._exist_inventory_file():
+            with open('inventory.txt', "r") as f:
+                lines = f.readlines()
+                return self._data_parse(lines)
+        else:
+            raise FileNotFoundError("File not found")
 
 
 class SaveProduct:
     def __init__(self, product=None):
         self.products = product
-
-    # def _exist_inventory_file(self):
-    #     if os.path.exists("inventory.txt"):
-    #         return True
         
     def _save_stock_in_file_txt(self, db):
         records = db._get_all_records()

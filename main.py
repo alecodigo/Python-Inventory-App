@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from src.exceptions import UnknownException
-from src.stock import Product, DB, SaveProduct, Menu
+from src.stock import Product, DB, SaveProduct, Menu, ReadDB
 
 if __name__ == "__main__":
     save_db = SaveProduct()
-    # read_db = ReadProduct()
+    read_db = ReadDB()
+    if read_db._exist_inventory_file():
+        data = read_db._load_stock_from_file()
+        db = DB._preload_data(data)
+        db._save_product_from_file()
     menu = Menu()
     option = False
     while option != "5":
@@ -68,5 +72,4 @@ if __name__ == "__main__":
 
     # Exit
     if option == "5":
-        # db = DB()
         save_db._save_stock_in_file_txt(db)
