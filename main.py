@@ -8,7 +8,7 @@ if __name__ == "__main__":
     if read_db._exist_inventory_file():
         data = read_db._load_stock_from_file()
         db = DB._preload_data(data)
-        db._save_product_from_file()
+        db.save_product_from_file()
     menu = Menu()
     option = False
     while option != "5":
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         if option == "2":
             product_sku = input("Enter the product sku: ")
             # db = DB()
-            product_db = db._update_product(product_sku)
+            product_db = db.update_product(product_sku)
             if product_db:
                 menu.print_update_options()
                 update_option = input("Enter the update option: ")
@@ -68,8 +68,8 @@ if __name__ == "__main__":
             
         if option == "4":
             product_sku = input("Enter the product product sku: ")
-            print(f"", db._get_product(product_sku))
+            print(f"", db.get_product(product_sku))
 
     # Exit
     if option == "5":
-        save_db._save_stock_in_file_txt(db)
+        save_db.save_stock_in_file_txt(db)

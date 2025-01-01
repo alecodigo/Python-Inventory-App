@@ -25,7 +25,7 @@ class DB:
             )
         return DB(tuple(product))
 
-    def _save_product_from_file(self):
+    def save_product_from_file(self):
         for product in self.product:
             self.db.update({
                 product.sku: {
@@ -46,17 +46,17 @@ class DB:
             }  
         })
         
-    def _get_product(self, sku):
+    def get_product(self, sku):
         return self.db.get(sku)
 
     def _delete_product(self, sku):
         self.db.pop(sku)
         return True
     
-    def _update_product(self, sku):
-        return self._get_product(sku)
+    def update_product(self, sku):
+        return self.get_product(sku)
 
-    def _get_all_records(self):
+    def get_all_records(self):
         return self.db
 
 class ReadDB:
@@ -85,8 +85,8 @@ class SaveProduct:
     def __init__(self, product=None):
         self.products = product
         
-    def _save_stock_in_file_txt(self, db):
-        records = db._get_all_records()
+    def save_stock_in_file_txt(self, db):
+        records = db.get_all_records()
         for k, v in records.items():
             with open("inventory.txt", "a") as f:
                 f.write(f"{k}: {v}\n")
